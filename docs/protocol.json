@@ -1,7 +1,7 @@
 {
-  "key_fingerprint": "SET_DURING_LOCAL_SETUP",
+  "key_fingerprint": "00b36b71ce0c7ce71e4e207e7642f400510a541e66d0abf34ae8f865d2178e00",
   "key_id": "176248",
   "protocol_version": "FG830-ATX-v1",
   "software_version": "1.1.0",
-  "status": "PRE-COMMITTED; RUN SETUP-KEY BEFORE PUSH"
+  "status": "PRE-COMMITTED; PRIVATE KEY NOT STORED IN GIT"
 }

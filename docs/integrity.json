@@ -7,13 +7,13 @@
     },
     {
       "file": "protocol.json",
-      "bytes": 197,
-      "sha256": "9b9ece0a200b044d35ed4bd8b570948c2d3bcd72af0dc7076e557a66c58c37d1"
+      "bytes": 250,
+      "sha256": "04e4b7c597c5fbc969b3405d01c04e2f41b34faaf0d9936e1b761864ee06df61"
     },
     {
       "file": "history.json",
-      "bytes": 46,
-      "sha256": "f120f942b3b4db3b069db9a734aa6429847d11de528ac30446d3b6e0750f6e13"
+      "bytes": 50,
+      "sha256": "a4f66be6ed9578d0bd48c87682e465ab2b700954618ac1e406c7a18184f7f19c"
     }
   ]
 }
