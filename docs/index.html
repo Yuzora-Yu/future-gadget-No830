@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090c12">
+  <meta name="description" content="Future Gadget No.830 automated temporal transceiver experiment status">
+  <title>FG830 AUTO TEMPORAL TRANSCEIVER</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">FUTURE GADGET No.830 · KEY ID 176248</p>
+      <h1>AUTO TEMPORAL<br>TRANSCEIVER</h1>
+      <p class="lead">金曜09:00に受信データを固定し、20:00以降に公式結果を自動確認して、秘密鍵で認証した送信試行を実行する公開ログ。</p>
+      <div class="badges">
+        <span id="protocol-badge">PROTOCOL LOADING</span>
+        <span id="key-badge">KEY FINGERPRINT LOADING</span>
+      </div>
+    </header>
+
+    <section class="result-hero panel" aria-labelledby="official-result-title">
+      <div class="label" id="official-result-title">LATEST OFFICIAL LOTO7 RESULT</div>
+      <div id="result-state" class="state pending">LOADING</div>
+      <div id="result-draw" class="draw-number">—</div>
+      <div id="result-main" class="lottery-balls" aria-label="本数字"></div>
+      <div class="bonus-line"><span>BONUS</span><span id="result-bonus" class="bonus-balls">—</span></div>
+      <p id="result-checked" class="note">—</p>
+      <p><a id="result-source" class="data-link hidden" rel="noreferrer" target="_blank">OFFICIAL SOURCE</a></p>
+    </section>
+
+    <section class="grid">
+      <article class="panel">
+        <div class="label">RECEPTION · FRIDAY 09:00 JST</div>
+        <div id="rx-state" class="state">LOADING</div>
+        <dl id="rx-details"></dl>
+      </article>
+      <article class="panel">
+        <div class="label">TRANSMISSION · FRIDAY 20:00+ JST</div>
+        <div id="tx-state" class="state">LOADING</div>
+        <dl id="tx-details"></dl>
+      </article>
+    </section>
+
+    <section class="panel history-panel">
+      <div class="history-head">
+        <div>
+          <div class="label">TRANSMISSION HISTORY</div>
+          <h2>自動送信記録</h2>
+        </div>
+        <a class="data-link" href="history.json">RAW JSON</a>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>抽せん日</th>
+              <th>回号</th>
+              <th>本数字</th>
+              <th>ボーナス</th>
+              <th>距離</th>
+              <th>状態</th>
+            </tr>
+          </thead>
+          <tbody id="history-body"><tr><td colspan="6">LOADING</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel protocol">
+      <div class="label">FIXED RULE</div>
+      <p>結果を知った後に、同日09:00の受信データ、秘密鍵、抽出位置、復号規則を変更しない。</p>
+      <p class="note">このソフトウェアは、既知の物理学で過去通信が成立することを保証しない。結果前データの固定、公式結果の無人取得、認証符号化、外部書き込みをしないローカル計算、事後照合を自動化する実験装置である。</p>
+      <p class="data-links">
+        <a href="status.json">STATUS JSON</a>
+        <a href="protocol.json">PROTOCOL JSON</a>
+        <a href="integrity.json">INTEGRITY JSON</a>
+      </p>
+    </section>
+
+    <footer><span id="updated">—</span> · El Psy Kongroo.</footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

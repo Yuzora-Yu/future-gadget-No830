@@ -1,0 +1,12 @@
+[Unit]
+Description=FG830 Friday temporal reception
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/fg830
+EnvironmentFile=/opt/fg830/.env.local
+ExecStart=/opt/fg830/.venv/bin/python -m temporal_mailbox receive
+ExecStart=/opt/fg830/.venv/bin/python -m temporal_mailbox build-site
+ExecStart=/opt/fg830/scripts/commit_and_push.sh RX

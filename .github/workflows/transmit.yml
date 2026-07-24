@@ -1,0 +1,101 @@
+name: Automatic Loto7 temporal transmission
+
+on:
+  schedule:
+    # Friday 20:00–Saturday 02:45 JST, every 15 minutes.
+    # GitHub cron uses UTC: Friday 11:00–17:45 UTC.
+    - cron: "*/15 11-17 * * 5"
+  workflow_dispatch:
+    inputs:
+      target_date:
+        description: "Emergency catch-up Friday date (YYYY-MM-DD); leave blank for normal due logic"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: fg830-data-writer
+  cancel-in-progress: false
+
+jobs:
+  transmit:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      TEMPORAL_KEY: ${{ secrets.TEMPORAL_KEY }}
+      ACTUATOR_SECONDS: "32"
+      TARGET_DATE: ${{ github.event.inputs.target_date || '' }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Check whether transmission is due
+        id: due
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -n "$TARGET_DATE" ]]; then
+            echo "value=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=$(python -m temporal_mailbox due)" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Install project and rendered-page reader
+        if: steps.due.outputs.value == 'true'
+        run: |
+          python -m pip install --disable-pip-version-check -e '.[transmit]'
+          python -m playwright install --with-deps chromium
+      - name: Check key and configuration
+        if: steps.due.outputs.value == 'true'
+        run: python -m temporal_mailbox doctor
+      - name: Check official result and execute keyed local actuator
+        if: steps.due.outputs.value == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -n "$TARGET_DATE" ]]; then
+            python -m temporal_mailbox transmit --date "$TARGET_DATE" --force
+          else
+            python -m temporal_mailbox transmit
+          fi
+      - name: Build public status files
+        if: steps.due.outputs.value == 'true'
+        run: python -m temporal_mailbox build-site
+      - name: Commit completed transmission
+        if: steps.due.outputs.value == 'true'
+        id: commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data docs/status.json docs/protocol.json docs/history.json docs/integrity.json
+          if git diff --cached --quiet; then
+            echo "Official result is not available yet; the next scheduled run will retry."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "TX $(TZ=Asia/Tokyo date +%F): automatic Loto7 result transmission"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+      - name: Configure GitHub Pages
+        if: steps.commit.outputs.changed == 'true'
+        uses: actions/configure-pages@v5
+      - name: Upload status page artifact
+        if: steps.commit.outputs.changed == 'true'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs
+      - name: Deploy status page
+        if: steps.commit.outputs.changed == 'true'
+        id: deployment
+        uses: actions/deploy-pages@v4

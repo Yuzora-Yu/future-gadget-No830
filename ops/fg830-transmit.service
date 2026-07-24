@@ -1,0 +1,13 @@
+[Unit]
+Description=FG830 automatic Loto7 temporal transmission
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/fg830
+EnvironmentFile=/opt/fg830/.env.local
+Environment=ACTUATOR_SECONDS=32
+ExecStart=/opt/fg830/.venv/bin/python -m temporal_mailbox transmit
+ExecStart=/opt/fg830/.venv/bin/python -m temporal_mailbox build-site
+ExecStart=/opt/fg830/scripts/commit_and_push.sh TX

@@ -1,0 +1,10 @@
+[Unit]
+Description=Run FG830 reception every Friday at 09:00 JST
+
+[Timer]
+OnCalendar=Fri *-*-* 09:00:00 Asia/Tokyo
+Persistent=true
+Unit=fg830-receive.service
+
+[Install]
+WantedBy=timers.target

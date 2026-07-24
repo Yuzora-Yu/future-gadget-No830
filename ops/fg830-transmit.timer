@@ -1,0 +1,11 @@
+[Unit]
+Description=Retry FG830 transmission every 15 minutes in the Friday window
+
+[Timer]
+OnCalendar=Fri *-*-* 20..23:0/15:00 Asia/Tokyo
+OnCalendar=Sat *-*-* 00..02:0/15:00 Asia/Tokyo
+Persistent=true
+Unit=fg830-transmit.service
+
+[Install]
+WantedBy=timers.target

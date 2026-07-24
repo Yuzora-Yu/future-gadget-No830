@@ -1,0 +1,69 @@
+name: Friday temporal reception
+
+on:
+  schedule:
+    # 00:00 UTC = Friday 09:00 JST
+    - cron: "0 0 * * 5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: fg830-data-writer
+  cancel-in-progress: false
+
+jobs:
+  receive:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      TEMPORAL_KEY: ${{ secrets.TEMPORAL_KEY }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install project
+        run: python -m pip install --disable-pip-version-check -e .
+      - name: Check key and configuration
+        run: python -m temporal_mailbox doctor
+      - name: Capture and decode current Friday noise
+        run: python -m temporal_mailbox receive
+      - name: Build public status files
+        run: python -m temporal_mailbox build-site
+      - name: Commit reception
+        id: commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data docs/status.json docs/protocol.json docs/history.json docs/integrity.json
+          if git diff --cached --quiet; then
+            echo "No new reception to commit"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "RX $(TZ=Asia/Tokyo date +%F): pre-result noise reception"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+      - name: Configure GitHub Pages
+        if: steps.commit.outputs.changed == 'true'
+        uses: actions/configure-pages@v5
+      - name: Upload status page artifact
+        if: steps.commit.outputs.changed == 'true'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs
+      - name: Deploy status page
+        if: steps.commit.outputs.changed == 'true'
+        id: deployment
+        uses: actions/deploy-pages@v4

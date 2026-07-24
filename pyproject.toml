@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "future-gadget-no830"
+version = "1.1.0"
+description = "Automated, pre-committed temporal transceiver experiment for Loto7"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+dependencies = []
+
+[project.optional-dependencies]
+transmit = ["playwright==1.61.0"]
+
+[project.scripts]
+fg830 = "temporal_mailbox.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["temporal_mailbox*"]
+
+[tool.ruff]
+line-length = 100

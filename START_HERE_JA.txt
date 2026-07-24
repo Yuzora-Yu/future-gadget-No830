@@ -1,0 +1,118 @@
+FG830 完全新規リポジトリ版 — 最初にここを読んでください
+================================================================
+
+このZIPは、GitHubの空リポジトリへそのまま置くための全部入り版です。
+秘密鍵だけは同梱していません。秘密鍵は各利用者が自分の端末で生成します。
+
+最短手順
+--------
+
+1. ZIPを展開し、フォルダ内でターミナルを開く。
+
+2. 秘密鍵を生成する。
+
+   python -m temporal_mailbox setup-key --save-local --write-fingerprint
+
+   表示された TEMPORAL_KEY の値を安全な場所へ保存する。
+   自動生成された .env.local はGitへ入れない（.gitignore設定済み）。
+
+3. ローカル試験を行う。
+
+   python -m unittest discover -s tests -v
+   python -m temporal_mailbox doctor
+   python -m temporal_mailbox simulate
+   python -m temporal_mailbox build-site
+
+4. GitHubで、README等を追加していない完全に空のPublicリポジトリを作る。
+
+5. このフォルダをmainブランチへpushする。
+
+   git init
+   git add .
+   git status
+   git commit -m "Pre-commit FG830-ATX-v1"
+   git branch -M main
+   git remote add origin https://github.com/YOUR_NAME/YOUR_REPOSITORY.git
+   git push -u origin main
+
+   git statusで .env.local が追加対象になっていないことを必ず確認する。
+
+6. GitHub Secretを登録する。
+
+   Settings
+   → Secrets and variables
+   → Actions
+   → New repository secret
+
+   Name  : TEMPORAL_KEY
+   Secret: 手順2で表示された値
+
+7. Actionsの書き込み権限を許可する。
+
+   Settings
+   → Actions
+   → General
+   → Workflow permissions
+   → Read and write permissions
+   → Save
+
+8. GitHub Pagesを有効にする。
+
+   Settings
+   → Pages
+   → Build and deployment
+   → Source: GitHub Actions
+
+9. Actionsタブで次を手動実行する。
+
+   Test protocol
+   Deploy status page
+
+10. 公開画面を開く。
+
+   https://YOUR_NAME.github.io/YOUR_REPOSITORY/
+
+毎週の自動処理
+--------------
+
+金曜09:00 JST予定:
+  受信ノイズを採取、復号、Gitへ固定、Pages更新
+
+金曜20:00 JST以降:
+  みずほ銀行の公式ロト7結果ページを確認
+  未掲載なら15分後に再試行
+  掲載されたら認証フレームを作成し、ローカル送信計算を実行
+  結果をGitへ固定し、Pages更新
+
+結果ファイル
+------------
+
+見やすい画面:
+  GitHub Pages
+
+最新状態:
+  docs/status.json
+
+履歴:
+  docs/history.json
+
+詳細:
+  data/receptions/YYYY-MM-DD.json
+  data/transmissions/YYYY-MM-DD.json
+  data/noise/YYYY-MM-DD.bin.zlib
+
+より詳しい説明
+--------------
+
+SETUP_GUIDE_JA.md          画面操作を含む完全手順
+PROTOCOL.md                固定プロトコル
+TRANSMISSION_COVENANT.md   自動送信方針
+README.md                  概要とコマンド
+MANIFEST_SHA256.txt        同梱ファイルの完全性確認
+
+注意
+----
+
+この装置は既知の物理学で過去通信を保証するものではありません。
+自動化されるのは、結果前データの固定、公式結果の取得、秘密鍵による
+符号化、外部書き込みをしないローカル計算、事後照合です。
