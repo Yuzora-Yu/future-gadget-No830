@@ -1,7 +1,26 @@
 {
+  "frame": {
+    "authenticated_tag_bits": 32,
+    "bytes": 16,
+    "crc": "CRC-16/CCITT-FALSE",
+    "sync": "0x829A"
+  },
   "key_fingerprint": "00b36b71ce0c7ce71e4e207e7642f400510a541e66d0abf34ae8f865d2178e00",
   "key_id": "176248",
   "protocol_version": "FG830-ATX-v1",
+  "receiver": {
+    "control_count": 127,
+    "eligibility_cutoff_jst": "Friday 18:00",
+    "noise_bytes": 262144,
+    "samples_per_bit": 64,
+    "scheduled_jst": "Friday 09:00"
+  },
+  "rule": "Reception data is never modified after the official result is known.",
   "software_version": "1.1.0",
-  "status": "PRE-COMMITTED; PRIVATE KEY NOT STORED IN GIT"
+  "transmitter": {
+    "actuator_mode": "keyed equal-work local computation",
+    "official_source": "https://www.mizuhobank.co.jp/takarakuji/check/loto/loto7/index.html",
+    "result_check_starts_jst": "Friday 20:00",
+    "retry_window_jst": "Friday 20:00 to Saturday 03:00"
+  }
 }
