@@ -2,8 +2,8 @@
   "generated_from": [
     {
       "file": "status.json",
-      "bytes": 2488,
-      "sha256": "d080925f67c79a999cdf2fe500351c4bc0eb36dd83b283658a6838546af72caf"
+      "bytes": 2516,
+      "sha256": "9d25ab6d1fee0ca1a2aa1ee36472d57e7654e144e9eab2fd8348f79bc8b2e1f5"
     },
     {
       "file": "protocol.json",
@@ -12,8 +12,8 @@
     },
     {
       "file": "history.json",
-      "bytes": 7633,
-      "sha256": "e8dfbc180d4e6fe9f6e86279418fcaab8627b97572f32802557c14970692abc5"
+      "bytes": 10178,
+      "sha256": "269ba3f03ca25402f8d412c6e60d58b37b7c2a1dff0006642a6257381b0166a7"
     }
   ]
 }
